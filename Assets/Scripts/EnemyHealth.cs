@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour
 {
-    float hitPoints = 100f;
+    [SerializeField] float hitPoints = 100f;
 
     public void TakeDamage(float damage)
     {
-        GetComponent<EnemyAI>().OnDamageTaken();
+        GetComponent<EnemyAI>().OnDamageTaken();    //sets to isProvoked
         hitPoints -= damage;
         if (hitPoints <= 0)
         {

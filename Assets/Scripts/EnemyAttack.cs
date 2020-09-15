@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyAttack : MonoBehaviour
 {
     PlayerHealth target;
-    float damage = 20f;
+    [SerializeField] float damage = 20f;
 
 
     // Start is called before the first frame update
@@ -14,13 +14,13 @@ public class EnemyAttack : MonoBehaviour
         target = FindObjectOfType<PlayerHealth>();
     }
 
-    public void AttackHitEvent()
+    public void AttackHitEvent()    //*called from the attack animator animation*
     {
-        if (target == null) return;
+        if (target == null) return; //error protection
         if (GetComponent<EnemyAI>().hitableRange)
         {
             target.GetComponent<PlayerHealth>().TakeDamage(damage);
-            Debug.Log("HIT");
+            //Debug.Log("HIT");
         }
     }
 }

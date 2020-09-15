@@ -7,40 +7,66 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] Camera FPCamera;
     [SerializeField] ParticleSystem muzzleFlash;
+    [SerializeField] ParticleSystem muzzleFlash2;
+
     [SerializeField] GameObject hitEffect;
-    float range = 100f;
-    float damage = 20f;
+    [SerializeField] float range = 100f;
+    [SerializeField] float damage = 20f;
 
     [SerializeField] Transform regularZoom;
     [SerializeField] Transform aimZoom;
 
     [SerializeField] Ammo ammoSlot;
+    [SerializeField] AmmoType ammoType; 
+
+    bool canShoot = true;
+    [SerializeField] float timeBetweenShots = 0.5f;
+
+
+    void OnEnable() //these 2 methods stop the weapon firerate from being exploited by switching to and fro between 2 weapons
+    {
+        if (!canShoot)
+        {
+            Invoke("WaitToShoot", timeBetweenShots);
+        }
+    }
+    void WaitToShoot()
+    {
+        canShoot = true;
+    }
 
     void Update()
     {
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetMouseButtonDown(0) && canShoot)
         {
-            Shoot();
+            StartCoroutine(Shoot());
         }
     }
 
-    private void Shoot()
+    IEnumerator Shoot()
     {
-        if (ammoSlot.GetAmmoCount() > 0)
+        canShoot = false;   //trigger/fire delay
+        if (ammoSlot.GetAmmoCount(ammoType) > 0)
         {
             PlayMuzzleFlash();
             ProcessRaycast();
-            ammoSlot.ReduceAmmo();
+            ammoSlot.ReduceAmmo(ammoType);
         }
         else
         {
             Debug.Log("out of ammo");
         }
+        yield return new WaitForSeconds(timeBetweenShots);  //the trigger delay amount
+        canShoot = true;
     }
 
     private void PlayMuzzleFlash()
     {
         muzzleFlash.Play();
+        if (muzzleFlash2 != null)   //for the skorpion
+        {
+            muzzleFlash2.Play();
+        }
     }
 
     private void ProcessRaycast()
@@ -51,11 +77,11 @@ public class Weapon : MonoBehaviour
             CreateHitImpact(hit);
             EnemyHealth target = hit.transform.GetComponent<EnemyHealth>();
 
-            if (target == null) return;
+            if (target == null) return; //if it didnt hit an 'Enemy'
 
             target.TakeDamage(damage);
         }
-        else
+        else   //if you shot into the sky or the 'range' was too far
         {
             return;
         }
@@ -71,13 +97,23 @@ public class Weapon : MonoBehaviour
     {
         if (zoomed)
         {
-            transform.localRotation = aimZoom.localRotation;
-            transform.localPosition = aimZoom.localPosition;
+            transform.localPosition = Vector3.Lerp(transform.localPosition, aimZoom.localPosition, Time.deltaTime * 15);    //lerp so the weapon doesnt snap
+
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, aimZoom.localRotation, Time.deltaTime * 15); //rotation is only really needed because of the UMP needing it
+
+
+            //transform.localRotation = aimZoom.localRotation;
+            //transform.localPosition = aimZoom.localPosition;
         }
         else
         {
-            transform.localRotation = regularZoom.localRotation;
-            transform.localPosition = regularZoom.localPosition;
+            transform.localPosition = Vector3.Lerp(transform.localPosition, regularZoom.localPosition, Time.deltaTime * 15);
+
+            transform.localRotation = Quaternion.Lerp(transform.localRotation, regularZoom.localRotation, Time.deltaTime * 15);
+
+
+            //transform.localRotation = regularZoom.localRotation;
+            //transform.localPosition = regularZoom.localPosition;
         }
     }
 }

@@ -37,7 +37,7 @@ public class EnemyAI : MonoBehaviour
         //}
     }
 
-    public void OnDamageTaken()
+    public void OnDamageTaken() //*called from enemyhealth*
     {
         isProvoked = true;
     }
@@ -71,7 +71,7 @@ public class EnemyAI : MonoBehaviour
     private void FaceTarget()
     {
         Vector3 direction = (target.position - transform.position).normalized;
-        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));    //dont edit the y axis
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * turnSpeed);
     }
 
