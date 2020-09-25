@@ -12,22 +12,30 @@ public class EnemyAI : MonoBehaviour
     NavMeshAgent navMeshAgent;
     float distanceToTarget = Mathf.Infinity;    //protection against the starting distance between the player and enemy being 0 before its calculated
     bool isProvoked = false;
+    EnemyHealth health;
 
     public bool hitableRange;   //when the enemy attack animation happens (eg swings arm), is the player still within range - otherwise player will always take damage if theyve activated attack which is wrong
 
     void Start()
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
+        health = GetComponent<EnemyHealth>();
     }
 
     void Update()
     {
+        if (health.IsDead())
+        {
+            navMeshAgent.enabled = false;
+            GetComponent<CapsuleCollider>().enabled = false;
+            enabled = false;    //disable script
+        }
         distanceToTarget = Vector3.Distance(target.position, transform.position);
         if (isProvoked) //this could be turned into 'if spawned'
         {
             EngageTarget();
         }
-        else if (distanceToTarget <= chaseRange)    //and this could possibly be turned into 'if close enough, spawn enemy')
+        else if (distanceToTarget <= chaseRange)    //and this could possibly be turned into 'if close enough, spawn enemy'
         {
             isProvoked = true;
         }
