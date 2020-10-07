@@ -15,7 +15,10 @@ public class Ammo : MonoBehaviour
         public int ammoAmount;
     }
 
-
+    public int GetAmmoCount(AmmoType ammoType)
+    {
+        return GetAmmoSlot(ammoType).ammoAmount;    //return the ammo count of the correct slot as we know which type is being used
+    }
 
     public void ReduceAmmo(AmmoType ammoType)
     {
@@ -26,12 +29,6 @@ public class Ammo : MonoBehaviour
     {
         GetAmmoSlot(ammoType).ammoAmount += ammoAmount; //reduce the ammo of the correct slot as we know which type is being used
     }
-
-    public int GetAmmoCount(AmmoType ammoType)
-    { 
-        return GetAmmoSlot(ammoType).ammoAmount;    //return the ammo count of the correct slot as we know which type is being used
-    }
-
 
 
     private AmmoSlot GetAmmoSlot(AmmoType ammoType)

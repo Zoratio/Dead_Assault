@@ -20,7 +20,7 @@ public class EnemyAttack : MonoBehaviour
         if (GetComponent<EnemyAI>().hitableRange)
         {
             target.GetComponent<PlayerHealth>().TakeDamage(damage);
-            Debug.Log("HIT");
+            target.GetComponent<DisplayDamage>().ShowDamageCanvas();
         }
     }
 }

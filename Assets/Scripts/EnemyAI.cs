@@ -18,6 +18,7 @@ public class EnemyAI : MonoBehaviour
 
     void Start()
     {
+        target = FindObjectOfType<PlayerHealth>().transform;
         navMeshAgent = GetComponent<NavMeshAgent>();
         health = GetComponent<EnemyHealth>();
     }
@@ -68,7 +69,14 @@ public class EnemyAI : MonoBehaviour
     {
         GetComponent<Animator>().SetBool("Attack", false);
         GetComponent<Animator>().SetTrigger("Move");
-        navMeshAgent.SetDestination(target.position);
+        if (health.IsDead())
+        {
+            return;
+        }
+        else
+        {
+            navMeshAgent.SetDestination(target.position);
+        }
     }
 
     private void AttackTarget()
