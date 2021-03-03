@@ -16,7 +16,6 @@ public class DeathHandle : MonoBehaviour
 
     public void HandleDeath()
     {
-        //GetComponentInChildren<Weapon>().enabled = false; //*if i just wanted to disable the muzzle flash*
         weapons.SetActive(false);
         reticle.enabled = false;
 
