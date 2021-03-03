@@ -29,7 +29,8 @@ public class FlashLightSystem : MonoBehaviour
 
     public void AddLightIntensity(float intensityAmount) 
     {
-        myLight.spotAngle += intensityAmount;
+        myLight.intensity += intensityAmount;
+        Debug.Log("here");
     }
 
     private void DecreaseLightAngle()
